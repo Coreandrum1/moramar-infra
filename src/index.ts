@@ -3,8 +3,8 @@ import helmet from "helmet";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import router from "../src/routes/urlRouter.js";
-import { errorHandler } from "../src/middlewares/errorHandler.js";
+import urlRouter from "../src/routes/urlRouter";
+import { errorHandler } from "../src/middlewares/errorHandler";
 
 console.log(process.env.MONGO_DB_CONNECTION_STRING);
 
@@ -21,7 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cors());
 
-app.use("/api/urls", router);
+app.use("/api/urls", urlRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "route not found" });
