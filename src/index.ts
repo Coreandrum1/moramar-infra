@@ -3,8 +3,10 @@ import helmet from "helmet";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import router from "./routes/urlRouter.ts";
-import { errorHandler } from "./middlewares/errorHandler.ts";
+import router from "../src/routes/urlRouter.js";
+import { errorHandler } from "../src/middlewares/errorHandler.js";
+
+console.log(process.env.MONGO_DB_CONNECTION_STRING);
 
 dotenv.config({ path: ".env" });
 
@@ -28,8 +30,6 @@ app.use((req, res) => {
 console.log("Connecting to MongoDB 2");
 
 app.use(errorHandler);
-
-console.log(process.env.MONGO_DB_CONNECTION_STRING);
 
 mongoose
   .connect(`${process.env.MONGO_DB_CONNECTION_STRING}`)
