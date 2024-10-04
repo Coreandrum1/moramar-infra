@@ -1,10 +1,9 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import { errorHandler } from "./middlewares/errorHandler";
+import { errorHandler } from "./middlewares/errorHandler.ts";
 import mongoose from "mongoose";
-import os from "os";
-import urlRouter from "./routes/urls";
+import urlRouter from "./routes/urls.ts";
 import dotenv from "dotenv";
 
 dotenv.config({ path: ".env" });

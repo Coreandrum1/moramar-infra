@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Url from "../models/urlRequest";
+import Url from "../models/urlRequest.ts";
 
 const getAll = async (req: Request, res: Response) => {
   try {
