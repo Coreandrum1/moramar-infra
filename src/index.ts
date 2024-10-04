@@ -12,3 +12,5 @@ app.listen(port, () => {
 });
 
 console.log("Hello, TypeScript with Express!");
+
+export default app;
