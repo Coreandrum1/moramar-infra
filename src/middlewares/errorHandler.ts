@@ -7,5 +7,3 @@ export const errorHandler = (err: Error, req: Request, res: Response) => {
   // Return custom error to user
   res.status(500).json({ error: "Internal Server Error" });
 };
-
-export default { errorHandler };
