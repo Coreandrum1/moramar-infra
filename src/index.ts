@@ -35,8 +35,8 @@ mongoose
   .connect(`${process.env.MONGO_DB_CONNECTION_STRING}`)
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(port, host, () => {
-      console.log(`[ ready ] http://${host}:${port}`);
+    app.listen(port, () => {
+      console.log(`[ ready ] ${host}:${port}`);
     });
   })
   .catch((e) => {
