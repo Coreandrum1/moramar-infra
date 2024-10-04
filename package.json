@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "build-tsc": "tsc",
+    "build": "tsc",
     "dev": "npx tsx src/index.ts",
     "lint": "eslint 'src/**/*.ts'"
   },
