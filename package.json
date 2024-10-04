@@ -6,10 +6,9 @@
   "main": "index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "build": "tsc",
+    "build-tsc": "tsc",
     "dev": "npx tsx src/index.ts",
-    "lint": "eslint 'src/**/*.ts'",
-    "vercel-build": "echo 'no build command'"
+    "lint": "eslint 'src/**/*.ts'"
   },
   "keywords": [],
   "author": "",
