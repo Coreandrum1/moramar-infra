@@ -65,7 +65,7 @@ const getFolderContentByFolderName = async (req: Request, res: Response) => {
     const folders = folderResponse.data.files;
 
     if (!folders.length) {
-      res.send("Folder not found.");
+      res.json([]);
       return;
     }
 

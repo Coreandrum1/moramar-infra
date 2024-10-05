@@ -1,102 +1,166 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Async API Call Example</title>
-  </head>
-  <body>
-    <style>
-      .url-list {
-        list-style-type: none;
+<style>
+  * {
+    font-family: Impact, sans-serif;
+  }
+
+  .pdf-list {
+    list-style-type: none;
+    padding: 0;
+    max-height: 1000px;
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+
+  .pdf-list div {
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .pdf-list div h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 1000px;
+    border: none;
+    margin-top: 10px;
+  }
+
+  .loading {
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .error-message,
+  .no-results {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .error-message {
+    color: red;
+  }
+
+  .no-results {
+    color: gray;
+  }
+
+  .container {
+    max-width: 1200px;
+    height: auto;
+    max-height: fit-content;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1 {
+    color: rgb(191, 30, 46);
+    letter-spacing: 3px;
+    font-weight: 300;
+  }
+
+  a {
+    letter-spacing: 1px;
+    font-weight: 100;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+</style>
+
+<div class="container">
+  <h1>LISTA DE ARCHIVOS</h1>
+  <div id="loadingMessage" class="loading">Cargando PDFs...</div>
+  <div id="pdfList" class="pdf-list"></div>
+</div>
+
+<script>
+  async function fetchUrls(email) {
+    const loadingMessage = document.getElementById("loadingMessage");
+    const pdfList = document.getElementById("pdfList");
+
+    try {
+      // Show loading state
+      loadingMessage.style.display = "block";
+      pdfList.style.display = "none";
+
+      const response = await fetch(
+        `https://moramar-infra.vercel.app/api/drive/${email}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
 
-      .url-list li {
-        padding: 5px;
-        background-color: #f0f0f0;
-        margin-bottom: 5px;
-        border-radius: 5px;
+      const data = await response.json();
+
+      // Hide the loading message and display the PDF list
+      loadingMessage.style.display = "none";
+      pdfList.style.display = "block";
+
+      // Display the PDFs
+      displayPDFs(data);
+    } catch (error) {
+      loadingMessage.style.display = "none";
+      pdfList.innerHTML = `<div class="error-message">Failed to load PDFs. Please try again later.</div>`;
+      console.error("There was a problem with the fetch operation:", error);
+    }
+  }
+
+  function displayPDFs(items) {
+    const pdfList = document.getElementById("pdfList");
+    pdfList.innerHTML = ""; // Clear list
+
+    if (items.length === 0) {
+      // Display message when there are no results
+      pdfList.innerHTML = `<div class="no-results">No PDFs found for the given email.</div>`;
+      return;
+    }
+
+    items.forEach((item) => {
+      const fileId = item.id;
+      const fileName = item.name;
+
+      if (fileId) {
+        const listItem = document.createElement("div");
+        const iframe = document.createElement("iframe");
+        const fileLink = document.createElement("a");
+
+        const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+        const fileUrl = `https://drive.google.com/file/d/${fileId}/view`;
+
+        iframe.src = embedUrl;
+
+        fileLink.href = fileUrl;
+        fileLink.target = "_blank";
+        fileLink.textContent = fileName;
+        fileLink.style.textDecoration = "none";
+        fileLink.style.color = "#0073e6";
+
+        listItem.appendChild(fileLink);
+        listItem.appendChild(iframe);
+        pdfList.appendChild(listItem);
       }
+    });
+  }
 
-      .url-list a {
-        text-decoration: none;
-        color: #007bff;
-      }
+  function getCookie(name) {
+    const cookieValue = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(`${name}=`))
+      ?.split("=")[1];
 
-      .url-list a:hover {
-        text-decoration: underline;
-      }
-    </style>
-    <h1>Retrieved URLs</h1>
-    <ul id="urlList" class="url-list"></ul>
+    return cookieValue ? decodeURIComponent(cookieValue) : null;
+  }
 
-    <script>
-      // Async function to call the API and pass the email
-      async function fetchUrls(email) {
-        try {
-          // Assuming the API is at '/api/urls/{email}'
-          const response = await fetch(
-            `https://moramar-infra.vercel.app/api/urls/${email}`
-          );
+  window.onload = () => {
+    const info_c2 = getCookie("info_c2");
+    const cookieObject = JSON.parse(info_c2);
 
-          console.log("holaa");
-
-          // Checking if the response is OK
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-
-          // Assuming the API returns a JSON array of URLs
-          const data = await response.json();
-          console.log(data);
-
-          // Call function to display the URLs in the DOM
-          displayUrls(data);
-        } catch (error) {
-          console.error("There was a problem with the fetch operation:", error);
-        }
-      }
-
-      // Function to display the URLs in the DOM
-      function displayUrls(urls) {
-        const urlList = document.getElementById("urlList");
-
-        // Clear the list before appending new items
-        urlList.innerHTML = "";
-
-        // Iterate over each URL and append it as a clickable link
-        urls.forEach((url) => {
-          const listItem = document.createElement("li");
-          const anchor = document.createElement("a");
-
-          // Set the href attribute and the displayed text
-          anchor.href = url.url;
-          anchor.textContent = url.url;
-          anchor.target = "_blank"; // Opens the link in a new tab
-
-          listItem.appendChild(anchor);
-          urlList.appendChild(listItem);
-        });
-      }
-
-      function getCookie(name) {
-        const cookieValue = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith(`${name}=`))
-          ?.split("=")[1];
-
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
-      }
-
-      // Call the function to fetch URLs when the page loads
-      window.onload = () => {
-        const info_c2 = getCookie("info_c2");
-        const cookieObject = JSON.parse(info_c2);
-        console.log(info_c2); // This will log the value of the "info_c2" cookie
-        console.log(cookieObject); // This will log the value of the "info_c2" cookie
-
-        fetchUrls(cookieObject.contactEmail);
-      };
-    </script>
-  </body>
-</html>
+    fetchUrls(cookieObject.contactEmail);
+  };
+</script>
