@@ -4,13 +4,21 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import urlRouter from "../src/routes/urlRouter";
+import driveRouter from "../src/routes/driveRouter";
 import { errorHandler } from "../src/middlewares/errorHandler";
-
-console.log(process.env.MONGO_DB_CONNECTION_STRING);
-
+import { google } from "googleapis";
+import { base64ToJson } from "./helpers/dataConverter";
 dotenv.config({ path: ".env" });
 
-console.log("Connecting to MongoDB");
+const credentials = base64ToJson(process.env.GOOGLE_API_KEY);
+const scopes = process.env.GOOGLE_API_SCOPES?.split(",") ?? [];
+
+const auth = new google.auth.GoogleAuth({
+  credentials,
+  scopes,
+});
+
+export const drive = google.drive({ version: "v3", auth });
 
 const app = express();
 const port = process.env.API_PORT ? Number(process.env.API_PORT) : 3000;
@@ -22,12 +30,11 @@ app.use(helmet());
 app.use(cors());
 
 app.use("/api/urls", urlRouter);
+app.use("/api/drive", driveRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "route not found" });
 });
-
-console.log("Connecting to MongoDB 2");
 
 app.use(errorHandler);
 

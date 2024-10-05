@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async API Call Example</title>
+  </head>
+  <body>
+    <style>
+      .url-list {
+        list-style-type: none;
+      }
+
+      .url-list li {
+        padding: 5px;
+        background-color: #f0f0f0;
+        margin-bottom: 5px;
+        border-radius: 5px;
+      }
+
+      .url-list a {
+        text-decoration: none;
+        color: #007bff;
+      }
+
+      .url-list a:hover {
+        text-decoration: underline;
+      }
+    </style>
+    <h1>Retrieved URLs</h1>
+    <ul id="urlList" class="url-list"></ul>
+
+    <script>
+      // Async function to call the API and pass the email
+      async function fetchUrls(email) {
+        try {
+          // Assuming the API is at '/api/urls/{email}'
+          const response = await fetch(
+            `https://moramar-infra.vercel.app/api/urls/${email}`
+          );
+
+          console.log("holaa");
+
+          // Checking if the response is OK
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          // Assuming the API returns a JSON array of URLs
+          const data = await response.json();
+          console.log(data);
+
+          // Call function to display the URLs in the DOM
+          displayUrls(data);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:", error);
+        }
+      }
+
+      // Function to display the URLs in the DOM
+      function displayUrls(urls) {
+        const urlList = document.getElementById("urlList");
+
+        // Clear the list before appending new items
+        urlList.innerHTML = "";
+
+        // Iterate over each URL and append it as a clickable link
+        urls.forEach((url) => {
+          const listItem = document.createElement("li");
+          const anchor = document.createElement("a");
+
+          // Set the href attribute and the displayed text
+          anchor.href = url.url;
+          anchor.textContent = url.url;
+          anchor.target = "_blank"; // Opens the link in a new tab
+
+          listItem.appendChild(anchor);
+          urlList.appendChild(listItem);
+        });
+      }
+
+      function getCookie(name) {
+        const cookieValue = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith(`${name}=`))
+          ?.split("=")[1];
+
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+      }
+
+      // Call the function to fetch URLs when the page loads
+      window.onload = () => {
+        const info_c2 = getCookie("info_c2");
+        const cookieObject = JSON.parse(info_c2);
+        console.log(info_c2); // This will log the value of the "info_c2" cookie
+        console.log(cookieObject); // This will log the value of the "info_c2" cookie
+
+        fetchUrls(cookieObject.contactEmail);
+      };
+    </script>
+  </body>
+</html>

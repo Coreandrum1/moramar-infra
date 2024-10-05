@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async API Call Example</title>
+  </head>
+  <body>
+    <style>
+      .pdf-list {
+        list-style-type: none;
+      }
+
+      .pdf-list li {
+        padding: 5px;
+        background-color: #f0f0f0;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+
+      iframe {
+        width: 100%;
+        height: 900px;
+        border: none;
+        margin-top: 10px;
+      }
+    </style>
+    <h1>Retrieved URLs</h1>
+    <ul id="pdfList" class="pdf-list"></ul>
+
+    <script>
+      // Async function to call the API and pass the email
+      async function fetchUrls(email) {
+        try {
+          // Assuming the API is at '/api/urls/{email}'
+          const response = await fetch(
+            `https://moramar-infra.vercel.app/api/drive/${email}`
+          );
+
+          console.log("holaa");
+
+          // Checking if the response is OK
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          // Assuming the API returns a JSON array of URLs
+          const data = await response.json();
+          console.log(data);
+
+          // Call function to display the URLs in the DOM
+          displayPDFs(data);
+        } catch (error) {
+          console.error("There was a problem with the fetch operation:", error);
+        }
+      }
+
+      // Function to display the URLs in the DOM
+      function displayPDFs(items) {
+        const pdfList = document.getElementById("pdfList");
+
+        // Clear the list before appending new items
+        pdfList.innerHTML = "";
+
+        items.forEach((item) => {
+          // Extract the file ID from the Google Drive URL
+          const fileId = item.id;
+
+          if (fileId) {
+            const listItem = document.createElement("li");
+            const iframe = document.createElement("iframe");
+
+            // Create the embeddable URL
+            const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+
+            // Set the iframe source to the embed URL
+            iframe.src = embedUrl;
+
+            listItem.appendChild(iframe);
+            pdfList.appendChild(listItem);
+          }
+        });
+      }
+
+      function getCookie(name) {
+        const cookieValue = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith(`${name}=`))
+          ?.split("=")[1];
+
+        return cookieValue ? decodeURIComponent(cookieValue) : null;
+      }
+
+      function extractFileId(url) {
+        const match = url.match(/\/file\/d\/(.*?)\/view/);
+        return match ? match[1] : null;
+      }
+
+      // Call the function to fetch URLs when the page loads
+      window.onload = () => {
+        const info_c2 = getCookie("info_c2");
+        const cookieObject = JSON.parse(info_c2);
+        console.log(info_c2); // This will log the value of the "info_c2" cookie
+        console.log(cookieObject); // This will log the value of the "info_c2" cookie
+
+        fetchUrls(cookieObject.contactEmail);
+      };
+    </script>
+  </body>
+</html>
