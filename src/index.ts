@@ -6,6 +6,7 @@ import driveRouter from "../src/routes/driveRouter";
 import { errorHandler } from "../src/middlewares/errorHandler";
 import { google } from "googleapis";
 import { base64ToJson } from "./helpers/dataConverter";
+import { corsOptions } from "./config/cors";
 dotenv.config({ path: ".env" });
 
 const credentials = base64ToJson(process.env.GOOGLE_API_KEY);
@@ -25,7 +26,7 @@ const host = process.env.HOST ?? "localhost"; // dynamic host
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use("/api/drive", driveRouter);
 
