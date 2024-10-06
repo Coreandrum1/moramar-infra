@@ -1,4 +1,4 @@
-const allowedOriginsArray = process.env.ALLOWED_ORIGINS?.split(",") ?? [];
+const allowedOriginsArray = process.env.CORS_ALLOWED_ORIGINS?.split(",") ?? [];
 
 export const corsOptions = {
   origin: function (
@@ -12,5 +12,4 @@ export const corsOptions = {
     }
   },
   credentials: true,
-  methods: ["GET"],
 };
