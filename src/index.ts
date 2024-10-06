@@ -1,9 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cors from "cors";
-import mongoose from "mongoose";
 import dotenv from "dotenv";
-import urlRouter from "../src/routes/urlRouter";
 import driveRouter from "../src/routes/driveRouter";
 import { errorHandler } from "../src/middlewares/errorHandler";
 import { google } from "googleapis";
@@ -29,7 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cors());
 
-app.use("/api/urls", urlRouter);
 app.use("/api/drive", driveRouter);
 
 app.use((req, res) => {
@@ -38,16 +35,8 @@ app.use((req, res) => {
 
 app.use(errorHandler);
 
-mongoose
-  .connect(`${process.env.MONGO_DB_CONNECTION_STRING}`)
-  .then(() => {
-    console.log("Connected to MongoDB");
-    app.listen(port, () => {
-      console.log(`[ ready ] ${host}:${port}`);
-    });
-  })
-  .catch((e) => {
-    console.error(e);
-  });
+app.listen(port, () => {
+  console.log(`[ ready ] ${host}:${port}`);
+});
 
 export default app;

@@ -16,7 +16,6 @@
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^5.0.0",
-    "@types/mongoose": "^5.11.97",
     "@types/node": "^22.7.4",
     "@typescript-eslint/eslint-plugin": "^8.8.0",
     "@typescript-eslint/parser": "^8.8.0",
@@ -32,7 +31,6 @@
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "googleapis": "^144.0.0",
-    "helmet": "^8.0.0",
-    "mongoose": "^8.7.0"
+    "helmet": "^8.0.0"
   }
 }

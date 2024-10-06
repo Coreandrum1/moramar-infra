@@ -1,9 +1,8 @@
 import express from "express";
-import driveController from "../controllers/driveController";
+import driveController from "../controllers/drive";
 
 const router = express.Router();
 
-// Get all categories
 router.get("/all", driveController.getAllFolders);
 
 router.get("/:folderName", driveController.getFolderContentByFolderName);

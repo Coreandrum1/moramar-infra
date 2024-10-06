@@ -42,6 +42,7 @@
     font-size: 18px;
     text-align: center;
     margin-top: 20px;
+    letter-spacing: 1px;
   }
 
   .error-message {
@@ -106,7 +107,7 @@
       displayPDFs(data);
     } catch (error) {
       loadingMessage.style.display = "none";
-      pdfList.innerHTML = `<div class="error-message">Failed to load PDFs. Please try again later.</div>`;
+      pdfList.innerHTML = `<div class="error-message">Hubo un error al cargar los archivos. Por favor, inténtalo de nuevo más tarde.</div>`;
       console.error("There was a problem with the fetch operation:", error);
     }
   }
@@ -117,7 +118,7 @@
 
     if (items.length === 0) {
       // Display message when there are no results
-      pdfList.innerHTML = `<div class="no-results">No PDFs found for the given email.</div>`;
+      pdfList.innerHTML = `<div class="no-results">No se encontraron archivos para tu correo electrónico. Contacta con nosotros si tienes alguna duda.</div>`;
       return;
     }
 
