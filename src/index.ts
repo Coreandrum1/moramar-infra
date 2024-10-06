@@ -23,10 +23,11 @@ const app = express();
 const port = process.env.API_PORT ? Number(process.env.API_PORT) : 3000;
 const host = process.env.HOST ?? "localhost"; // dynamic host
 
-app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use("/api/drive", driveRouter);
 
